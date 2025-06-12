@@ -2,8 +2,6 @@
 
 Este projeto é uma aplicação Django que integra com a API do Sympla para importar e gerenciar eventos. Ele oferece uma API REST para consulta dos eventos importados e mantém um histórico de importações.
 
-## 📸 Screenshots
-
 ### Dashboard de Eventos
 ![Dashboard de Eventos](docs/assets/image.png)
 
