@@ -43,7 +43,7 @@ Este projeto é uma aplicação Django que integra com a API do Sympla para impo
 
 1. Clone o repositório:
 ```bash
-git clone [URL_DO_SEU_REPOSITORIO]
+git clone git@github.com:Matheus1237/sympla-events-prod.git
 cd sympla-events-prod
 ```
 
@@ -118,20 +118,78 @@ sympla-events-prod/
 4. Clique em "Criar chave de acesso"
 5. Copie o token gerado e adicione ao seu arquivo `.env`
 
-[Adicione uma screenshot do processo de geração do token aqui]
-
 ## 📊 Modelos de Dados
 
 ### Event
 - `sympla_id`: ID do evento no Sympla
 - `name`: Nome do evento
-- `start_date`: Data e hora de início
+- `start_date`: Data e hora de início (formato: DD/MM/YYYY HH:MM)
 - `venue`: Local do evento (relacionamento)
 - `category`: Categoria do evento (relacionamento)
 - `raw_data`: Dados brutos do evento
 - `import_version`: Versão da importação
+- `created_at`: Data de criação do registro
+- `updated_at`: Data da última atualização
 
 ### Venue
 - `sympla_id`: ID do local no Sympla
 - `name`: Nome do local
-- `
+- `address`: Endereço completo
+- `city`: Cidade
+- `state`: Estado
+- `country`: País
+
+### Category
+- `name`: Nome da categoria
+- `created_at`: Data de criação
+
+### ImportLog
+- `version`: Versão da importação
+- `status`: Status da importação (SUCCESS, ERROR)
+- `imported_count`: Quantidade de eventos importados
+- `error_message`: Mensagem de erro (se houver)
+- `created_at`: Data da importação
+- `duration`: Duração da importação em segundos
+
+## 🔄 API Endpoints
+
+### Events
+- `GET /events/`: Lista todos os eventos
+  - Suporta paginação (page_size=10 por padrão)
+  - Formato de data: DD/MM/YYYY HH:MM
+  - Inclui informações do local e categoria
+  - Filtros disponíveis:
+    - `?name=`: Filtra por nome do evento
+    - `?category=`: Filtra por categoria
+    - `?start_date_after=`: Eventos após data
+    - `?start_date_before=`: Eventos antes da data
+
+### Import Logs
+- `GET /import-logs/`: Lista todos os logs de importação
+  - Ordenado por data de criação (mais recente primeiro)
+  - Mostra status e quantidade de eventos importados
+  - Filtros disponíveis:
+    - `?status=`: Filtra por status (SUCCESS/ERROR)
+    - `?date=`: Filtra por data da importação
+
+## 🐳 Comandos Docker Úteis
+
+```bash
+# Visualizar logs
+docker-compose logs -f web
+
+# Executar migrations
+docker-compose exec web python manage.py migrate
+
+# Importar eventos
+docker-compose exec web python manage.py import_events
+
+# Reiniciar serviços
+docker-compose restart
+
+# Parar todos os serviços
+docker-compose down
+
+# Limpar volumes (cuidado: apaga dados do banco)
+docker-compose down -v
+```
